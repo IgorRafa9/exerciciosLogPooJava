@@ -1,82 +1,78 @@
 package Questão1;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Questão1 {
 
-	public static void main(String[] args) {
-		SimpleDateFormat fmt = new SimpleDateFormat("dd/mm/YYYY");
-
+	public static void main(String[] args) throws IOException{
+		
 		Scanner key = new Scanner(System.in);
-
-		Calendar agora = Calendar.getInstance();
-		Empresa empresa = new Empresa();
-		ArrayList<String> empr = new ArrayList<>();
-		Funcionario func = new Funcionario();
-		int escolha, quant = 0;
-		;
-		double salario;
-		String CNPJ, resp, CPF, nome, sobrenome;
-
-		do {
-			System.out.println("O que deseja?");
-			System.out.println("1-Cadastrar empresa\n" + "2-Lista de Empresas\n" + "3-Sair");
-			escolha = key.nextInt();
-			switch (escolha) {
-			case 1:
-				System.out.println("Insira o nome da empresa: ");
-				nome = key.next();
-				empresa.nome(nome);
-				System.out.println("CNPJ: ");
-				CNPJ = key.next();
-				empresa.CNPJ(CNPJ);
-				empresa.mostrarInfo();
-				System.out.println("============================");
-				System.out.println("Deseja cadastrar funcionário?");
-				System.out.println("1 - Sim\n2 - Não");
-				escolha = key.nextInt();
-				switch (escolha) {
-				case 1:
-					do {
-						System.out.println("Informe o nome do funcionário: ");
-						nome = key.next();
-						func.nomeFunc(nome);
-						System.out.println("Sobrenome");
-						sobrenome = key.next();
-						System.out.println("CPF: ");
-						CPF = key.next();
-						System.out.println("Salário: ");
-						salario = key.nextDouble();
-						func.salario(salario);
-						System.out.println("Cadastrar mais um funcionário?");
-						escolha = key.nextInt();
-					} while (escolha == 1);
-					break;
-				case 2:
-					System.out.println("Saiu");
-					break;
-				default:
-					System.out.println("Opção inválida.");
-				}
-			case 2:
-				break;
-			case 3:
-				System.out.println("Saiu da tela");
-				break;
+		var buffreader = new BufferedReader(new InputStreamReader(System.in));
+		
+		boolean sair = false;
+		int opc;
+		String name, CNPJ,resp;
+		
+		Empresa empresa = new Empresa(5);
+		Empresa emp;
+		Empresa empr;
+		
+		while(!sair) {
+			
+			try {
+				do {
+					System.out.println("Escolha uma ação: ");
+					System.out.println("1 - Cadastrar Empresa");
+					System.out.println("2 - Listar empresa");
+					System.out.println("3 - Pesquisar empresa");
+					opc = key.nextInt();
+					
+					switch(opc) {
+						case 1:
+							System.out.println("Nome da empresa: ");
+							name = buffreader.readLine();
+							
+							System.out.println("CNPJ: ");
+							CNPJ = buffreader.readLine();
+							
+							empr = new Empresa(name, CNPJ);
+							
+							empresa.addEmpresa(empr);
+							
+							break;
+						case 2:
+							empresa.listarEmpresa();
+							break;
+						case 3:
+							System.out.println("Nome da empresa: ");
+							name = buffreader.readLine();
+							
+							try {
+								empresa.buscarEmpresa(name);
+							}catch (Exception e){
+								throw new NullPointerException("Empresa não existe");
+							}
+							break;
+						case 4:
+							
+							
+						default:
+							System.out.println("Opção inválida.");
+					}
+					System.out.println("Deseja algo mais?");
+					resp = key.next();
+				}while(resp.equalsIgnoreCase("S"));
+			}catch(InputMismatchException e) {
+				System.out.println("Insira um valor: ");
+				key.next();
 			}
-
-			System.out.println("Deseja algo mais?");
-			resp = key.next();
-
-		} while (resp.equalsIgnoreCase("S"));
-		System.out.println("Saiu. Obrigado e volte sempre!!!");
-		System.out.printf
-
-		("%tF\n", agora);
-		System.out.printf("%tr\n", agora);
-		key.close();
+		}
+		
+		
 	}
 }
